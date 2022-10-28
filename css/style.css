@@ -312,7 +312,7 @@ a[href*='tel'], a[href*='mailto'] {
 	margin-top: 15px;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.box-minimal {
 		max-width: 360px;
 		margin-left: auto;
@@ -344,7 +344,7 @@ a[href*='tel'], a[href*='mailto'] {
 	margin-top: 10px;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.box-light {
 		max-width: 300px;
 		margin-left: auto;
@@ -1879,7 +1879,7 @@ textarea.form-input {
 	margin-right: -7px;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.form-inline {
 		display: block;
 	}
@@ -2218,7 +2218,7 @@ textarea.form-input {
 	margin-top: 0;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.footer-standard .box-1 {
 		margin-left: 0;
 	}
@@ -2419,7 +2419,7 @@ textarea.form-input {
 	margin-top: 5px;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.profile-minimal {
 		max-width: 360px;
 		margin-left: auto;
@@ -2746,7 +2746,7 @@ html:not(.tablet):not(.mobile) .profile-minimal-caption {
 	margin-top: 15px;
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.counter-minimal-title {
 		font-size: 16px;
 		line-height: 1.4;
@@ -3461,7 +3461,7 @@ html [class*='section-'].section-bottom-0 {
 		align-content: space-between;}
 }
 
-@media (max-width : 400px ){
+@media (max-width : 500px ){
 	.section-single .section-single-main-content {
 		max-width: 240px;
 		margin-left: auto;
