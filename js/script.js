@@ -1,5 +1,6 @@
-"use strict";
+
 (function () {
+	"use strict";
 	// Global variables
 	var userAgent = navigator.userAgent.toLowerCase(),
 		initialDate = new Date(),
@@ -430,58 +431,6 @@
 			}
 		}
 
-		/**
-		 * @desc Initialize the gallery with one image
-		 * @param {object} itemToInit - jQuery object
-		 * @param {string} addClass - additional gallery class
-		 */
-		function initLightGalleryItem(itemToInit, addClass) {
-			if (!isNoviBuilder) {
-				$(itemToInit).lightGallery({
-					selector: "this",
-					addClass: addClass,
-					counter: false,
-					youtubePlayerParams: {
-						modestbranding: 1,
-						showinfo: 0,
-						rel: 0,
-						controls: 0
-					},
-					vimeoPlayerParams: {
-						byline: 0,
-						portrait: 0
-					}
-				});
-			}
-		}
-
-		/**
-		 * @desc Google map function for getting latitude and longitude
-		 */
-		function getLatLngObject(str, marker, map, callback) {
-			var coordinates = {};
-			try {
-				coordinates = JSON.parse(str);
-				callback(new google.maps.LatLng(
-					coordinates.lat,
-					coordinates.lng
-				), marker, map)
-			} catch (e) {
-				map.geocoder.geocode({'address': str}, function (results, status) {
-					if (status === google.maps.GeocoderStatus.OK) {
-						var latitude = results[0].geometry.location.lat();
-						var longitude = results[0].geometry.location.lng();
-
-						callback(new google.maps.LatLng(
-							parseFloat(latitude),
-							parseFloat(longitude)
-						), marker, map)
-					}
-				})
-			}
-		}
-
-
 		// Additional class on html if mac os.
 		if (isMac) {
 			$html.addClass("mac-os");
@@ -629,5 +578,9 @@
 		}
 
 
-	});
+})()
+
 }());
+
+
+
