@@ -23,20 +23,13 @@
 			rdInputLabel: $(".form-label"),
 			regula: $("[data-constraints]"),
 			wow: $(".wow"),
-			owl: $(".owl-carousel"),
 			isotope: $(".isotope-wrap"),
 			customToggle: $("[data-custom-toggle]"),
 			counter: $(".counter"),
 			progressLinear: $(".progress-linear"),
 			preloader: $(".preloader"),
-			lightGallery: $("[data-lightgallery='group']"),
-			lightGalleryItem: $("[data-lightgallery='item']"),
-			lightDynamicGalleryItem: $("[data-lightgallery='dynamic']"),
-			copyrightYear: $(".copyright-year"),
 			buttonWinona: $('.button-winona'),
-			slick: $('.slick-slider'),
-			videoOverlay: $('.video-overlay'),
-			maps: $(".google-map-container")
+			slick: $('.slick-slider')
 		};
 
 	/**
@@ -76,12 +69,6 @@
 				delay: 0,
 				duration: pageTransitionAnimationDuration,
 				classActive: 'animated',
-				conditions: function (event, link) {
-					return
-					!/(\#|callto:|tel:|mailto:|:\/\/)/.test(link)
-					&& !event.currentTarget.hasAttribute('data-lightgallery')
-					&& event.currentTarget.getAttribute('href') !== 'javascript:void(0);';
-				},
 				onTransitionStart: function (options) {
 					setTimeout(function () {
 						plugins.preloader.removeClass('loaded');
@@ -144,236 +131,12 @@
 			}
 		}
 
-		// Isotope
-		if ( plugins.isotope.length ) {
-			for ( var i = 0; i < plugins.isotope.length; i++ ) {
-				var
-					wrap = plugins.isotope[ i ],
-					filterHandler = function ( event ) {
-						event.preventDefault();
-						for ( var n = 0; n < this.isoGroup.filters.length; n++ ) this.isoGroup.filters[ n ].classList.remove( 'active' );
-						this.classList.add( 'active' );
-						this.isoGroup.isotope.arrange( { filter: this.getAttribute( "data-isotope-filter" ) !== '*' ? '[data-filter*="' + this.getAttribute( "data-isotope-filter" ) + '"]' : '*' } );
-					},
-					resizeHandler = function () {
-						this.isoGroup.isotope.layout();
-					};
-
-				wrap.isoGroup = {};
-				wrap.isoGroup.filters = wrap.querySelectorAll( '[data-isotope-filter]' );
-				wrap.isoGroup.node = wrap.querySelector( '.isotope' );
-				wrap.isoGroup.layout = wrap.isoGroup.node.getAttribute( 'data-isotope-layout' ) ? wrap.isoGroup.node.getAttribute( 'data-isotope-layout' ) : 'masonry';
-				wrap.isoGroup.isotope = new Isotope( wrap.isoGroup.node, {
-					itemSelector: '.isotope-item',
-					layoutMode: wrap.isoGroup.layout,
-					filter: '*',
-					columnWidth: ( function() {
-						if ( wrap.isoGroup.node.hasAttribute('data-column-class') ) return wrap.isoGroup.node.getAttribute('data-column-class');
-						if ( wrap.isoGroup.node.hasAttribute('data-column-width') ) return parseFloat( wrap.isoGroup.node.getAttribute('data-column-width') );
-					}() )
-				} );
-
-				for ( var n = 0; n < wrap.isoGroup.filters.length; n++ ) {
-					var filter = wrap.isoGroup.filters[ n ];
-					filter.isoGroup = wrap.isoGroup;
-					filter.addEventListener( 'click', filterHandler );
-				}
-
-				window.addEventListener( 'resize', resizeHandler.bind( wrap ) );
-			}
-		}
 	});
+	
 
 	// Initialize scripts that require a finished document
 	$(function () {
 		isNoviBuilder = window.xMode;
-
-		/**
-		 * @desc Initialize owl carousel plugin
-		 * @param {object} c - carousel jQuery object
-		 */
-		function initOwlCarousel(c) {
-			var aliaces = ["-", "-sm-", "-md-", "-lg-", "-xl-", "-xxl-"],
-				values = [0, 576, 768, 992, 1200, 1600],
-				responsive = {};
-
-			for (var j = 0; j < values.length; j++) {
-				responsive[values[j]] = {};
-				for (var k = j; k >= -1; k--) {
-					if (!responsive[values[j]]["items"] && c.attr("data" + aliaces[k] + "items")) {
-						responsive[values[j]]["items"] = k < 0 ? 1 : parseInt(c.attr("data" + aliaces[k] + "items"), 10);
-					}
-					if (!responsive[values[j]]["slideBy"] && c.attr("data" + aliaces[k] + "slideBy")) {
-						responsive[values[j]]["slideBy"] = k < 0 ? 1 : parseInt(c.attr("data" + aliaces[k] + "slide-by"), 10);
-					}
-					if (!responsive[values[j]]["stagePadding"] && responsive[values[j]]["stagePadding"] !== 0 && c.attr("data" + aliaces[k] + "stage-padding")) {
-						responsive[values[j]]["stagePadding"] = k < 0 ? 0 : parseInt(c.attr("data" + aliaces[k] + "stage-padding"), 10);
-					}
-					if (!responsive[values[j]]["margin"] && responsive[values[j]]["margin"] !== 0 && c.attr("data" + aliaces[k] + "margin")) {
-						responsive[values[j]]["margin"] = k < 0 ? 30 : parseInt(c.attr("data" + aliaces[k] + "margin"), 10);
-					}
-				}
-			}
-
-			// Enable custom pagination
-			if (c.attr('data-dots-custom')) {
-				c.on("initialized.owl.carousel", function (event) {
-					var carousel = $(event.currentTarget),
-						customPag = $(carousel.attr("data-dots-custom")),
-						active = 0;
-
-					if (carousel.attr('data-active')) {
-						active = parseInt(carousel.attr('data-active'), 10);
-					}
-
-					carousel.trigger('to.owl.carousel', [active, 300, true]);
-					customPag.find("[data-owl-item='" + active + "']").addClass("active");
-
-					customPag.find("[data-owl-item]").on('click', function (e) {
-						e.preventDefault();
-						carousel.trigger('to.owl.carousel', [parseInt(this.getAttribute("data-owl-item"), 10), 300, true]);
-					});
-
-					carousel.on("translate.owl.carousel", function (event) {
-						customPag.find(".active").removeClass("active");
-						customPag.find("[data-owl-item='" + event.item.index + "']").addClass("active")
-					});
-				});
-			}
-
-			c.on("initialized.owl.carousel", function () {
-				initLightGalleryItem(c.find('[data-lightgallery="item"]'), 'lightGallery-in-carousel');
-			});
-
-			c.owlCarousel({
-				autoplay: isNoviBuilder ? false : c.attr("data-autoplay") === "true",
-				autoplayTimeout: c.attr("data-autoplay-timeout") ? parseInt(c.attr("data-autoplay-timeout"), 10) : 100,
-				autoplaySpeed: c.attr("data-autoplay-speed") ? parseInt(c.attr("data-autoplay-speed"), 10) : 2800,
-				autoplayHoverPause: true,
-				loop: isNoviBuilder ? false : c.attr("data-loop") !== "false",
-				items: 1,
-				lazyLoad: true,
-				center: c.attr("data-center") === "true",
-				navContainer: c.attr("data-navigation-class") || false,
-				mouseDrag: isNoviBuilder ? false : c.attr("data-mouse-drag") !== "false",
-				nav: c.attr("data-nav") === "true",
-				dots: c.attr("data-dots") === "true",
-				dotsContainer: c.attr("data-pagination-class") || false,
-				dotsEach: c.attr("data-dots-each") ? parseInt(c.attr("data-dots-each"), 10) : false,
-				dotsSpeed: c.attr("data-dots-speed") ? parseInt(c.attr("data-dots-speed"), 10) : false,
-				animateIn: c.attr('data-animation-in') ? c.attr('data-animation-in') : false,
-				animateOut: c.attr('data-animation-out') ? c.attr('data-animation-out') : false,
-				responsive: responsive,
-				navText: function () {
-					try {
-						return JSON.parse(c.attr("data-nav-text"));
-					} catch (e) {
-						return [];
-					}
-				}(),
-				navClass: function () {
-					try {
-						return JSON.parse(c.attr("data-nav-class"));
-					} catch (e) {
-						return ['owl-prev', 'owl-next'];
-					}
-				}()
-			});
-		}
-
-		/**
-		 * @desc Attach form validation to elements
-		 * @param {object} elements - jQuery object
-		 */
-		function attachFormValidator(elements) {
-			// Custom validator - phone number
-			regula.custom({
-				name: 'PhoneNumber',
-				defaultMessage: 'Invalid phone number format',
-				validator: function () {
-					if (this.value === '') return true;
-					else return /^(\+\d)?[0-9\-\(\) ]{5,}$/i.test(this.value);
-				}
-			});
-
-			for (var i = 0; i < elements.length; i++) {
-				var o = $(elements[i]), v;
-				o.addClass("form-control-has-validation").after("<span class='form-validation'></span>");
-				v = o.parent().find(".form-validation");
-				if (v.is(":last-child")) o.addClass("form-control-last-child");
-			}
-
-			elements.on('input change propertychange blur', function (e) {
-				var $this = $(this), results;
-
-				if (e.type !== "blur") if (!$this.parent().hasClass("has-error")) return;
-				if ($this.parents('.rd-mailform').hasClass('success')) return;
-
-				if ((results = $this.regula('validate')).length) {
-					for (i = 0; i < results.length; i++) {
-						$this.siblings(".form-validation").text(results[i].message).parent().addClass("has-error");
-					}
-				} else {
-					$this.siblings(".form-validation").text("").parent().removeClass("has-error")
-				}
-			}).regula('bind');
-
-			var regularConstraintsMessages = [
-				{
-					type: regula.Constraint.Required,
-					newMessage: "The text field is required."
-				},
-				{
-					type: regula.Constraint.Email,
-					newMessage: "The email is not a valid email."
-				},
-				{
-					type: regula.Constraint.Numeric,
-					newMessage: "Only numbers are required"
-				},
-				{
-					type: regula.Constraint.Selected,
-					newMessage: "Please choose an option."
-				}
-			];
-
-
-			for (var i = 0; i < regularConstraintsMessages.length; i++) {
-				var regularConstraint = regularConstraintsMessages[i];
-
-				regula.override({
-					constraintType: regularConstraint.type,
-					defaultMessage: regularConstraint.newMessage
-				});
-			}
-		}
-
-		/**
-		 * @desc Check if all elements pass validation
-		 * @param {object} elements - object of items for validation
-		 * @return {boolean}
-		 */
-		function isValidated(elements) {
-			var results, errors = 0;
-
-			if (elements.length) {
-				for (var j = 0; j < elements.length; j++) {
-
-					var $input = $(elements[j]);
-					if ((results = $input.regula('validate')).length) {
-						for (k = 0; k < results.length; k++) {
-							errors++;
-							$input.siblings(".form-validation").text(results[k].message).parent().addClass("has-error");
-						}
-					} else {
-						$input.siblings(".form-validation").text("").parent().removeClass("has-error")
-					}
-				}
-
-				return errors === 0;
-			}
-			return true;
-		}
 
 		/**
 		 * @desc Initialize Bootstrap tooltip with required placement
@@ -386,76 +149,6 @@
 				plugins.bootstrapTooltip.tooltip({placement: 'bottom'});
 			} else {
 				plugins.bootstrapTooltip.tooltip({placement: tooltipPlacement});
-			}
-		}
-
-		/**
-		 * @desc Initialize the gallery with set of images
-		 * @param {object} itemsToInit - jQuery object
-		 * @param {string} addClass - additional gallery class
-		 */
-		function initLightGallery(itemsToInit, addClass) {
-			if (!isNoviBuilder) {
-				$(itemsToInit).lightGallery({
-					thumbnail: $(itemsToInit).attr("data-lg-thumbnail") !== "false",
-					selector: "[data-lightgallery='item']",
-					autoplay: $(itemsToInit).attr("data-lg-autoplay") === "true",
-					pause: parseInt($(itemsToInit).attr("data-lg-autoplay-delay")) || 5000,
-					addClass: addClass,
-					mode: $(itemsToInit).attr("data-lg-animation") || "lg-slide",
-					loop: $(itemsToInit).attr("data-lg-loop") !== "false"
-				});
-			}
-		}
-
-		/**
-		 * @desc Initialize the gallery with dynamic addition of images
-		 * @param {object} itemsToInit - jQuery object
-		 * @param {string} addClass - additional gallery class
-		 */
-		function initDynamicLightGallery(itemsToInit, addClass) {
-			if (!isNoviBuilder) {
-				$(itemsToInit).on("click", function () {
-					$(itemsToInit).lightGallery({
-						thumbnail: $(itemsToInit).attr("data-lg-thumbnail") !== "false",
-						selector: "[data-lightgallery='item']",
-						autoplay: $(itemsToInit).attr("data-lg-autoplay") === "true",
-						pause: parseInt($(itemsToInit).attr("data-lg-autoplay-delay")) || 5000,
-						addClass: addClass,
-						mode: $(itemsToInit).attr("data-lg-animation") || "lg-slide",
-						loop: $(itemsToInit).attr("data-lg-loop") !== "false",
-						dynamic: true,
-						dynamicEl: JSON.parse($(itemsToInit).attr("data-lg-dynamic-elements")) || []
-					});
-				});
-			}
-		}
-
-		// Additional class on html if mac os.
-		if (isMac) {
-			$html.addClass("mac-os");
-		}
-
-		// Adds some loosing functionality to IE browsers (IE Polyfills)
-		if (isIE) {
-			if (isIE < 10) {
-				$html.addClass("lt-ie-10");
-			}
-
-			if (isIE < 11) {
-				$.getScript('js/pointer-events.min.js')
-					.done(function () {
-						$html.addClass("ie-10");
-						PointerEventsPolyfill.initialize({});
-					});
-			}
-
-			if (isIE === 11) {
-				$html.addClass("ie-11");
-			}
-
-			if (isIE === 12) {
-				$html.addClass("ie-edge");
 			}
 		}
 
@@ -554,11 +247,6 @@
 				}
 
 			}
-		}
-
-		// RD Input Label
-		if (plugins.rdInputLabel.length) {
-			plugins.rdInputLabel.RDInputLabel();
 		}
 
 		
